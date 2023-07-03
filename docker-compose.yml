@@ -25,3 +25,9 @@ services:
       - 3000:3000
     depends_on:
       - db
+  client:
+    build: ./client
+    ports:
+      - 8080:80
+    depends_on:
+      - server
