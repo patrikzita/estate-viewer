@@ -19,3 +19,9 @@ services:
       PGADMIN_DEFAULT_PASSWORD: password
     depends_on:
       - db
+  server:
+    build: ./server
+    ports:
+      - 3000:3000
+    depends_on:
+      - db

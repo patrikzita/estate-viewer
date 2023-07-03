@@ -72,8 +72,6 @@ const main = async () => {
     apartmentsData = apartmentsData.concat(data);
   }
 
-  console.log(apartmentsData);
-  console.log(apartmentsData.length);
   await saveToDatabase(apartmentsData);
 
   await browser.close();
