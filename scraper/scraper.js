@@ -45,11 +45,16 @@ const checkIfEmpty = async () => {
 };
 
 const saveToDatabase = async (data) => {
-  for (const item of data) {
-    await pool.query("INSERT INTO apartments (title, imgSrc) VALUES ($1, $2)", [
-      item.title,
-      item.imgSrc,
-    ]);
+  try {
+    for (const item of data) {
+      await pool.query(
+        "INSERT INTO apartments (title, imgSrc) VALUES ($1, $2)",
+        [item.title, item.imgSrc]
+      );
+    }
+    console.log("Data saved successfully to the database!");
+  } catch (err) {
+    console.error("There was an error while saving data to the database:", err);
   }
 };
 
