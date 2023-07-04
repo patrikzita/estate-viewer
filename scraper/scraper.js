@@ -11,6 +11,35 @@ const pool = new Pool({
   port: 5432,
 });
 
+const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+const checkDatabaseConnection = async () => {
+  while (true) {
+    try {
+      const client = await pool.connect();
+      client.release();
+      console.log("Successfully connected to the database.");
+      break;
+    } catch (err) {
+      console.error(
+        "Unable to connect to the database, retrying in 5 seconds...",
+        err
+      );
+      await sleep(5000);
+    }
+  }
+};
+
+const checkIfEmpty = async () => {
+  const res = await pool.query("SELECT * FROM apartments LIMIT 1");
+  if (res.rows.length > 0) {
+    console.log("Data already exists in the database. Exiting...");
+    process.exit(0);
+  }
+};
+
 const saveToDatabase = async (data) => {
   for (const item of data) {
     await pool.query("INSERT INTO apartments (title, imgSrc) VALUES ($1, $2)", [
@@ -39,6 +68,9 @@ const createTable = async () => {
 };
 
 const main = async () => {
+  await checkDatabaseConnection()
+  await checkIfEmpty();
+
   const browser = await puppeteer.launch({
     headless: true,
     args: [
@@ -54,7 +86,7 @@ const main = async () => {
 
   let apartmentsData = [];
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 25; i++) {
     await page.goto(url + "?strana=" + (i + 1), { waitUntil: "networkidle2" });
 
     let data = await page.evaluate((url) => {

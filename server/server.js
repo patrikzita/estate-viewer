@@ -11,19 +11,30 @@ const pool = new Pool({
 });
 
 const app = express();
-app.use(cors({ origin: "http://localhost:8080" }));
+app.use(cors({ origin: "http://localhost:5173" }));
 const port = 3000;
 
 app.get("/apartments", async (req, res) => {
-  const page = req.query.page || 1;
-  const limit = req.query.limit || 50;
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 20;
   const offset = (page - 1) * limit;
 
   const result = await pool.query(
     "SELECT * FROM apartments ORDER BY id ASC LIMIT $1 OFFSET $2",
-    [limit, offset]
+    [limit + 1, offset]
   );
-  res.json(result.rows);
+
+  const rows = result.rows;
+  const hasMore = rows.length > limit;
+
+  if (hasMore) {
+    rows.pop();
+  }
+
+  res.json({
+    hasMore,
+    apartments: rows,
+  });
 });
 
 app.listen(port, () => {

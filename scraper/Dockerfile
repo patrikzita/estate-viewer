@@ -1,9 +1,9 @@
 FROM node:latest
 
-# Set working directory
+
 WORKDIR /app
 
-# Install dependencies
+
 RUN apt-get update && apt-get install -y \
     fonts-liberation \
     gconf-service \
@@ -38,11 +38,10 @@ RUN apt-get update && apt-get install -y \
     libxtst6 \
     xdg-utils
 
-# Copy the script to the container
+
 COPY scraper.js /app
 
-# Install dependencies
 RUN npm install puppeteer pg
 
-# Set the command to run the script
+
 CMD ["node", "scraper.js"]
