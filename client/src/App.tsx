@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import ApartmentCard from "./components/ApartmentCard";
 import SkeletonCard from "./components/SkeletonCard";
 import Error from "./components/Error";
-import { Button } from "./components/ui/button";
+import { Button } from "./components/ui/Button";
 import Loader from "./components/Loader";
 import { ChevronRight } from "lucide-react";
 import { ChevronLeft } from "lucide-react";
@@ -33,6 +33,13 @@ function App() {
 
   if (isError) {
     return <Error />;
+  }
+  if (!isLoading && data && data.apartments.length === 0) {
+    return (
+      <div>
+        <h1 className="text-lg">No data available.</h1>
+      </div>
+    );
   }
 
   return (
