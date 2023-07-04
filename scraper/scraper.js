@@ -33,10 +33,14 @@ const checkDatabaseConnection = async () => {
 };
 
 const checkIfEmpty = async () => {
-  const res = await pool.query("SELECT * FROM apartments LIMIT 1");
-  if (res.rows.length > 0) {
-    console.log("Data already exists in the database. Exiting...");
-    process.exit(0);
+  try {
+    const res = await pool.query("SELECT * FROM apartments LIMIT 1");
+    if (res.rows.length > 0) {
+      console.log("Data already exists in the database. Exiting...");
+      process.exit(0);
+    }
+  } catch (err) {
+    console.log("Table 'apartments' doesn't exist or there was an error.");
   }
 };
 
@@ -68,9 +72,9 @@ const createTable = async () => {
 };
 
 const main = async () => {
-  await checkDatabaseConnection()
+  await checkDatabaseConnection();
+  await createTable();
   await checkIfEmpty();
-
   const browser = await puppeteer.launch({
     headless: true,
     args: [
@@ -82,12 +86,10 @@ const main = async () => {
   });
   const page = await browser.newPage();
 
-  await createTable();
-
   let apartmentsData = [];
 
   for (let i = 0; i < 25; i++) {
-    await page.goto(url + "?strana=" + (i + 1), { waitUntil: "networkidle2" });
+    await page.goto(url + "?page=" + (i + 1), { waitUntil: "networkidle2" });
 
     let data = await page.evaluate((url) => {
       const apartmentsPods = Array.from(
