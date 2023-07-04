@@ -11,7 +11,7 @@ const pool = new Pool({
 });
 
 const app = express();
-app.use(cors({ origin: "http://localhost:8080" }));
+app.use(cors({ origin: ["http://localhost:8080", "http://localhost:5173"] }));
 const port = 3000;
 
 app.get("/apartments", async (req, res) => {
