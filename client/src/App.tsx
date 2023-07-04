@@ -3,6 +3,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import ApartmentCard from "./components/ApartmentCard";
 import SkeletonCard from "./components/SkeletonCard";
+import Error from "./components/Error";
 
 type Apartment = {
   title: string;
@@ -19,14 +20,17 @@ function App() {
     return data;
   };
 
-  const { data, isLoading, isError, isFetching, isPreviousData } = useQuery({
-    queryKey: ["apartmens", page],
-    queryFn: () => fetchApartmens(page),
-    keepPreviousData: true,
-  });
+  const { data, isLoading, isError, error, isFetching, isPreviousData } =
+    useQuery({
+      queryKey: ["apartmens", page],
+      queryFn: () => fetchApartmens(page),
+      keepPreviousData: true,
+    });
+    console.log(error);
+    
 
   if (isError) {
-    return <h1>Error</h1>;
+    return <Error />;
   }
 
   return (
@@ -71,6 +75,7 @@ function App() {
             onClick={() => {
               if (!isPreviousData && data.hasMore) {
                 setPage((old) => old + 1);
+                window.scrollTo(0, 0);
               }
             }}
             disabled={isPreviousData || !data?.hasMore}
