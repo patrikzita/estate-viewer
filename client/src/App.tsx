@@ -9,12 +9,18 @@ import Loader from "./components/Loader";
 import { ChevronRight } from "lucide-react";
 import { ChevronLeft } from "lucide-react";
 import Navbar from "./components/Navbar";
+import z from "zod";
 
-type Apartment = {
-  title: string;
-  imgsrc: string;
-  id: string;
-};
+const apartment = z.object({
+  id: z.number(),
+  title: z.string(),
+  imgsrc: z.string(),
+});
+
+const fetchSchema = z.object({
+  hasMore: z.boolean(),
+  apartments: z.array(apartment),
+});
 
 function App() {
   const [page, setPage] = useState<number>(1);
@@ -22,7 +28,7 @@ function App() {
     const { data } = await axios.get(
       `http://localhost:3000/apartments?page=${page}`
     );
-    return data;
+    return fetchSchema.parse(data);
   };
 
   const { data, isLoading, isError, isFetching, isPreviousData } = useQuery({
@@ -55,7 +61,7 @@ function App() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {data.apartments.map((apartment: Apartment) => (
+            {data.apartments.map((apartment) => (
               <ApartmentCard
                 key={apartment.id}
                 title={apartment.title}
@@ -78,7 +84,7 @@ function App() {
           )}
           <Button
             onClick={() => {
-              if (!isPreviousData && data.hasMore) {
+              if (!isPreviousData && data?.hasMore) {
                 setPage((old) => old + 1);
                 window.scrollTo(0, 0);
               }
