@@ -15,7 +15,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({ title, imgsrc }) => {
         placeholderSrc="placeholder.jpg"
       />
       <div className="p-6">
-        <h2 className="mb-1 font-medium  tracking-widest">{title}</h2>
+        <h2 className="mb-1 font-medium tracking-widest">{title}</h2>
       </div>
     </div>
   );
