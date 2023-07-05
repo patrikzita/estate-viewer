@@ -5,11 +5,15 @@ type ApartmentCardProps = {
   title: string;
   imgsrc: string;
 };
-
 const ApartmentCard: React.FC<ApartmentCardProps> = ({ title, imgsrc }) => {
   return (
     <div className="h-full cursor-pointer overflow-hidden rounded-lg border-2 border-gray-200 hover:shadow-lg">
-      <LazyLoadImage alt={title} src={imgsrc} effect="blur" />
+      <LazyLoadImage
+        alt={title}
+        src={imgsrc}
+        effect="blur"
+        placeholderSrc="placeholder.jpg"
+      />
       <div className="p-6">
         <h2 className="mb-1 font-medium  tracking-widest">{title}</h2>
       </div>
