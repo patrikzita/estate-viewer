@@ -45,16 +45,16 @@ function App() {
   return (
     <>
       <Navbar />
-      <div className="container px-5 py-24 mx-auto">
+      <div className="container mx-auto px-5 py-24">
         {isFetching ? <Loader /> : null}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 20 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {data.apartments.map((apartment: Apartment) => (
               <ApartmentCard
                 key={apartment.id}
@@ -64,7 +64,7 @@ function App() {
             ))}
           </div>
         )}
-        <div className="flex items-center justify-center mt-4 gap-4">
+        <div className="mt-4 flex items-center justify-center gap-4">
           {page != 1 && (
             <Button
               onClick={() => {
